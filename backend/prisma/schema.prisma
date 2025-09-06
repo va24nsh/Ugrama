@@ -35,6 +35,8 @@ model User {
   paymentsReceivedAsPayee Payment[]        @relation("PayeeRelation")
   certificates            Certificate[]
   refreshTokens           RefreshToken[]
+  invoices                Invoice[]
+  transactions            Transaction[]
 }
 
 model RefreshToken {
@@ -188,6 +190,36 @@ model Certificate {
   @@unique([userId, courseId])
 }
 
+model Invoice {
+  id           String        @id @default(cuid())
+  userId       String
+  amount       Float
+  currency     String        @default("USD")
+  status       InvoiceStatus @default(PENDING)
+  description  String?
+  paidAt       DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id])
+  transactions Transaction[]
+}
+
+model Transaction {
+  id              String            @id @default(cuid())
+  invoiceId       String
+  userId          String
+  amount          Float
+  paymentMethod   String
+  status          TransactionStatus @default(PENDING)
+  gatewayResponse Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  invoice         Invoice           @relation(fields: [invoiceId], references: [id])
+  user            User              @relation(fields: [userId], references: [id])
+}
+
 enum Role {
   STUDENT
   EDUCATOR
@@ -205,6 +237,20 @@ enum ResourceType {
   DOCUMENT
   LINK
   EXERCISE
+}
+
+enum InvoiceStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
 }
 
 enum EnrollmentStatus {
