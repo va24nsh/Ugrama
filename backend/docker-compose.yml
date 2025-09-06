@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: local_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/ugramaPostgres
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/ugramaMongo
+
+  backend:
+    build: .
+    container_name: backend
+    restart: always
+    depends_on:
+      - postgres
+      - mongo
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      MONGODB_URI: ${MONGODB_URI}
+      ETHEREUM_NETWORK: ${ETHEREUM_NETWORK}
+      INFURA_PROJECT_ID: ${INFURA_PROJECT_ID}
+      CONTRACT_ADDRESS: ${CONTRACT_ADDRESS}
+      PRIVATE_KEY: ${PRIVATE_KEY}
+      TOKEN_SECRET: ${TOKEN_SECRET}
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
+  mongo-data:
