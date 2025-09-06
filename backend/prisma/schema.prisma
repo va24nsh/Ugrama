@@ -1,0 +1,227 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password      String?
+  firstName     String
+  lastName      String
+  role          Role     @default(STUDENT)
+  walletAddress String?
+  authType      AuthType @default(EMAIL)
+  googleId      String?  @unique
+  avatar        String?
+  emailVerified Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  studentProfile          StudentProfile?
+  educatorProfile         EducatorProfile?
+  paymentsMadeAsPayer     Payment[]        @relation("PayerRelation")
+  paymentsReceivedAsPayee Payment[]        @relation("PayeeRelation")
+  certificates            Certificate[]
+  refreshTokens           RefreshToken[]
+}
+
+model RefreshToken {
+  id          String   @id @default(cuid())
+  token       String   @unique
+  userId      String
+  role        Role
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model StudentProfile {
+  id          String       @id @default(cuid())
+  userId      String       @unique
+  interests   String[]
+  skillLevel  String?
+  goals       String?
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enrollments Enrollment[]
+
+}
+
+model EducatorProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  qualifications String[]
+  experience     String?
+  expertise      String[]
+  website        String?
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courses        Course[]
+
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  price       Float
+  duration    Int
+  level       Level    @default(BEGINNER)
+  thumbnail   String?
+  category    String
+  educatorId  String
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  educator     EducatorProfile @relation(fields: [educatorId], references: [id])
+  enrollments  Enrollment[]
+  modules      Module[]
+  certificates Certificate[]
+
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  order       Int
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons     Lesson[]
+
+}
+
+model Lesson {
+  id             String           @id @default(cuid())
+  title          String
+  content        String
+  duration       Int
+  order          Int
+  moduleId       String
+  module         Module           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  resources      Resource[]
+  lessonProgress LessonProgress[]
+
+}
+
+model Resource {
+  id       String       @id @default(cuid())
+  name     String
+  type     ResourceType
+  url      String
+  lessonId String
+  lesson   Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+}
+
+model Enrollment {
+  id          String           @id @default(cuid())
+  studentId   String
+  courseId    String
+  enrolledAt  DateTime         @default(now())
+  completedAt DateTime?
+  status      EnrollmentStatus @default(ACTIVE)
+
+  student  StudentProfile   @relation(fields: [studentId], references: [id])
+  course   Course           @relation(fields: [courseId], references: [id])
+  payment  Payment?
+  progress LessonProgress[]
+
+  @@unique([studentId, courseId])
+}
+
+model LessonProgress {
+  id           String    @id @default(cuid())
+  enrollmentId String
+  lessonId     String
+  completed    Boolean   @default(false)
+  completedAt  DateTime?
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id])
+  lesson     Lesson     @relation(fields: [lessonId], references: [id])
+
+  @@unique([enrollmentId, lessonId])
+}
+
+model Payment {
+  id               String        @id @default(cuid())
+  amount           Float
+  currency         String        @default("USD")
+  status           PaymentStatus @default(PENDING)
+  paymentMethod    String
+  transactionId    String?
+  blockchainTxHash String?
+  payerId          String
+  payeeId          String
+  enrollmentId     String?       @unique
+  createdAt        DateTime      @default(now())
+
+  payer      User        @relation("PayerRelation", fields: [payerId], references: [id])
+  payee      User        @relation("PayeeRelation", fields: [payeeId], references: [id])
+  enrollment Enrollment? @relation(fields: [enrollmentId], references: [id])
+}
+
+model Certificate {
+  id                String   @id @default(cuid())
+  userId            String
+  courseId          String
+  issuedAt          DateTime @default(now())
+  certificateUrl    String
+  blockchainTokenId String? // NFT token ID on blockchain
+  metadataHash      String? // IPFS hash for certificate metadata
+
+  user   User   @relation(fields: [userId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
+
+  @@unique([userId, courseId])
+}
+
+enum Role {
+  STUDENT
+  EDUCATOR
+  ADMIN
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum ResourceType {
+  VIDEO
+  DOCUMENT
+  LINK
+  EXERCISE
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum AuthType {
+  EMAIL
+  GOOGLE
+  WALLET // block-chain based authentication
+}
