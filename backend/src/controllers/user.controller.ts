@@ -1,14 +1,19 @@
 import { Request, Response } from "express";
 import { AuthService } from "../services/user.service";
 import { TokenService } from "../services/token.service";
+import { AuthType, Role } from "@prisma/client";
 
 export class UserController {
     static async registerWithEmail(req: Request, res: Response) {
         try {
             const { email, password, firstName, lastName, role } = req.body;
-            const user = await AuthService.registerWithEmail(email, password, firstName, lastName, role);
-            const tokens = await TokenService.generateTokens({ id: user.id, email: user.email, role });
-            await TokenService.saveRefreshToken(user.id, tokens.refreshToken, role);
+            let userRole;
+            if(role === "student") userRole = Role.STUDENT;
+            else if(role === "educator") userRole = Role.EDUCATOR;
+            else throw new Error("Invalid role");
+            const user = await AuthService.registerWithEmail(email, password, firstName, lastName, userRole);
+            const tokens = await TokenService.generateTokens({ id: user.id, email: user.email, role: userRole });
+            await TokenService.saveRefreshToken(user.id, tokens.refreshToken, userRole);
 
             res.cookie("refreshToken", tokens.refreshToken, {
                 httpOnly: true,
@@ -18,7 +23,7 @@ export class UserController {
             });
             res.status(201).json({ success: true, message: 'User registered successfully', data: { accessToken: tokens.accessToken } });
         } catch (error) {
-            res.status(500).json({ success: false, error: 'Registration failed' });
+            res.status(500).json({ success: false, error: error instanceof Error ? error.message : "Registration failed" });
         }
     }
 
