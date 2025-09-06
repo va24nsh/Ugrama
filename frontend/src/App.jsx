@@ -1,34 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { createContext, useState } from 'react'
+import Login from './Components/Login'
+import Dashboard from './Components/Dashboard/StudentDashboard/Dashboard';
+import { BrowserRouter } from 'react-router-dom';
 
-function App() {
-  const [count, setCount] = useState(0)
+const MyContext = createContext({
+  isSidebarOpen: true,
+  setIsSidebarOpen: () => {}
+});
+
+// Export the context so other components can import it
+export { MyContext };
+
+const App = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  
+  const values = {
+    isSidebarOpen,
+    setIsSidebarOpen
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <MyContext.Provider value={values}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/previewai" element={<Dashboard />} />
+          </Routes>
+        </BrowserRouter>
+      </MyContext.Provider>
+    </div>
   )
 }
 
