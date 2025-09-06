@@ -1,45 +1,108 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Variants } from "framer-motion"; // Add this import
+
 
 export const LoginForm = () => {
-  // ...existing useState, useToast, and useNavigate code...
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const fadeInUp = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
+const fadeInUp: Variants = {
+  initial: { 
+    opacity: 0, 
+    y: 20 
+  },
+  animate: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 1,
+      ease: "easeOut"
+    }
+  }
+};
+
+const staggerChildren: Variants = {
+  initial: {}, // Add initial state
+  animate: {
+    transition: {
+      delayChildren: 0.5,
+      staggerChildren: 0.4
+    }
+  }
+};
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Simulate login - in real app, this would be an API call
+    const mockUser = {
+      id: 123,
+      name: "John Doe",
+      email: formData.email,
+      user_type: "student", // This would come from backend
+    };
+    
+    localStorage.setItem("ugram_user", JSON.stringify(mockUser));
+    
+    toast({
+      title: "Welcome back!",
+      description: "You've been successfully logged in",
+    });
+
+    navigate("/dashboard");
   };
 
-  const staggerChildren = {
-    animate: {
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
+  const handleGoogleLogin = () => {
+    toast({
+      title: "Google Sign-in",
+      description: "Google OAuth integration would be implemented here",
+    });
+  };
+
+  const handleForgotPassword = () => {
+    toast({
+      title: "Password Reset",
+      description: "Password reset link would be sent to your email",
+    });
   };
 
   return (
-    <motion.form 
-      // onSubmit={handleSubmit} 
+    <motion.form
+      onSubmit={handleSubmit}
       variants={staggerChildren}
       initial="initial"
       animate="animate"
       className="space-y-6"
     >
-      <motion.div variants={fadeInUp} className="space-y-4">
+      <motion.div 
+        variants={fadeInUp}
+        className="space-y-4"
+      >
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          <h2 className="text-2xl font-bold text-center mb-6">Welcome Back!</h2>
+        </motion.div>
+
         <div>
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
             type="email"
             placeholder="Enter your email"
-            // value={formData.email}
-            // onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+            value={formData.email}
+            onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
             required
             className="border-2 border-foreground"
           />
@@ -51,26 +114,14 @@ export const LoginForm = () => {
             id="password"
             type="password"
             placeholder="Enter your password"
-            // value={formData.password}
-            // onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+            value={formData.password}
+            onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
             required
             className="border-2 border-foreground"
           />
         </div>
       </motion.div>
 
-      {/* Forgot Password */}
-      <motion.div variants={fadeInUp} className="text-right">
-        <button
-          type="button"
-          // onClick={handleForgotPassword}
-          className="text-sm text-primary hover:underline"
-        >
-          Forgot Password?
-        </button>
-      </motion.div>
-
-      {/* Submit Button */}
       <motion.div variants={fadeInUp}>
         <Button 
           type="submit" 
@@ -82,36 +133,33 @@ export const LoginForm = () => {
         </Button>
       </motion.div>
 
-      {/* Google Sign-in */}
       <motion.div variants={fadeInUp}>
         <Button 
           type="button"
           variant="outline"
           size="lg"
           className="w-full border-2 border-foreground"
-          // onClick={handleGoogleLogin}
+          onClick={handleGoogleLogin}
         >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
-            {/* ...existing SVG paths... */}
+            {/* ... Google SVG paths ... */}
           </svg>
           Continue with Google
         </Button>
       </motion.div>
 
-      {/* Signup Link */}
-      <motion.p 
-        variants={fadeInUp} 
-        className="text-center text-sm text-muted-foreground"
-      >
-        Don't have an account?{" "}
-        <button
-          type="button"
-          // onClick={() => navigate("/signup")}
-          className="text-primary font-semibold hover:underline"
-        >
-          Sign up here
-        </button>
-      </motion.p>
+      <motion.div variants={fadeInUp}>
+        <p className="text-center text-sm text-muted-foreground">
+          Don't have an account?{" "}
+          <button
+            type="button"
+            onClick={() => navigate("/signup")}
+            className="text-primary font-semibold hover:underline"
+          >
+            Sign up here
+          </button>
+        </p>
+      </motion.div>
     </motion.form>
   );
 };

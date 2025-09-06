@@ -4,7 +4,7 @@ import { SignupForm } from "@/components/auth/SignupForm";
 const Signup = () => {
   return (
     <AuthLayout 
-      title="Join Ugram" 
+      title="Join EdVerse"  // Changed from "Join Ugram"
       subtitle="Start your personalized learning journey"
     >
       <SignupForm />
