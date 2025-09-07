@@ -39,20 +39,23 @@ export const SignupForm = () => {
     }
 
     // Simulate API call
-    const user = await fetch("http://localhost:5000/api/V1/user/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-        role: userType
-      }),
-      credentials: "include"
-    });
+    const user = await fetch(
+      "http://localhost:5000/api/v1/user/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          role: userType,
+        }),
+        credentials: "include",
+      }
+    );
     const userData = await user.json();
 
     localStorage.setItem("accessToken", JSON.stringify(userData.data.accessToken));
@@ -111,26 +114,26 @@ export const SignupForm = () => {
       {/* Form Fields */}
       <div className="space-y-4">
         <div>
-          <Label htmlFor="name">Full Name</Label>
+          <Label htmlFor="firstName">First Name</Label>
           <Input
-            id="name"
+            id="firstName"
             type="text"
-            placeholder="Enter your full name"
+            placeholder="Enter your first name"
             value={formData.firstName}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
             required
             className="border-2 border-foreground"
           />
         </div>
 
         <div>
-          <Label htmlFor="name">Last Name</Label>
+          <Label htmlFor="lastName">Last Name</Label>
           <Input
-            id="name"
+            id="lastName"
             type="text"
             placeholder="Enter your last name"
             value={formData.lastName}
-            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            onChange={(e) => setFormData(prev => ({ ...prev, lastName : e.target.value }))}
             required
             className="border-2 border-foreground"
           />
