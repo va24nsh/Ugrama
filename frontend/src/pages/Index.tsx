@@ -29,14 +29,15 @@ const Index = () => {
     
        <div className="flex gap-4">
           <button
-            // onClick={handleLogin}
+            onClick={() => navigate('/login')}
             className="bg-white text-black px-6 py-2 rounded-2xl border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 cursor-pointer font-medium"
             style={{ borderWidth: '3px' }}
+
           >
             Login
           </button>
           <button
-            // onClick={handleSignup}
+            onClick={()=>navigate('/signup')}
             className="bg-white text-black px-6 py-2 rounded-2xl border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all duration-150 cursor-pointer font-medium"
             style={{ borderWidth: '3px' }}
           >
