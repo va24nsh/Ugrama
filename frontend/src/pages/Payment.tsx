@@ -30,8 +30,14 @@ const Payment = () => {
       });
       
       setTimeout(() => {
-        navigate("/course-module");
-      }, 2000);
+        navigate("/post-payment-onboarding", {
+          state: {
+            courseName,
+            coursePrice,
+            paymentMethod: "card",
+          },
+        });
+      }, 1500);
     } else {
       // Card payment validation
       if (!formData.cardNumber || !formData.expiryDate || !formData.cvv || !formData.cardholderName) {
@@ -49,8 +55,14 @@ const Payment = () => {
       });
       
       setTimeout(() => {
-        navigate("/course-module");
-      }, 2000);
+        navigate("/post-payment-onboarding", {
+          state: {
+            courseName,
+            coursePrice,
+            paymentMethod: "card",
+          },
+        });
+      }, 1500);
     }
   };
 

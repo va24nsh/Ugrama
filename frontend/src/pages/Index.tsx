@@ -30,7 +30,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      <header className="absolute top-0 right-0 p-6 z-10 bg-white w-full flex justify-end items-center border-b-4 border-foreground h-[67px]">
+      <header className="absolute top-0 right-0 p-6 z-10 bg-white w-full flex justify-between items-center border-b-4 border-foreground h-[67px]">
+        <h2 className="text-2xl font-bold font-">EdVerse</h2>
         <div className="flex gap-4">
           <button
             onClick={() => navigate("/login")}
@@ -48,94 +49,162 @@ const Index = () => {
           </button>
         </div>
       </header>
-
-      <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] flex items-center justify-center mt-20">
+      // Replace the existing eclipse section with this responsive version
+      <div className="relative w-full h-[400px] sm:h-[400px] md:h-[500px] flex items-center justify-center mt-20">
         <motion.div
           initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1 }}
-          className="relative"
+          className="relative w-full max-w-[1200px] px-4"
         >
-          <svg
-            width="1000"
-            height="600"
-            viewBox="0 0 1000 600"
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          >
-            <motion.path
-              d="M 200 300 C 200 150, 800 150, 800 300 C 800 450, 200 450, 200 300"
-              fill="none"
-              stroke="black"
-              strokeWidth="2"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{ duration: 2, ease: "easeInOut" }}
-            />
-          </svg>
+          {/* Mobile View */}
+          <div className="block sm:hidden">
+            <svg
+              viewBox="0 0 500 400"
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[130%] h-auto"
+            >
+              <motion.path
+                d="M 100 200 C 100 100, 400 100, 400 200 C 400 300, 100 300, 100 200"
+                fill="none"
+                stroke="black"
+                strokeWidth="2"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 2, ease: "easeInOut" }}
+              />
+            </svg>
+          </div>
+
+          {/* Desktop View */}
+          <div className="hidden sm:block">
+            <svg
+              viewBox="0 0 1200 700"
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] md:w-[130%] h-auto"
+            >
+              <motion.path
+                d="M 150 350 C 150 175, 1050 175, 1050 350 C 1050 525, 150 525, 150 350"
+                fill="none"
+                stroke="black"
+                strokeWidth="2"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 2, ease: "easeInOut" }}
+              />
+            </svg>
+          </div>
 
           <motion.div
-            className="relative z-10 text-center"
+            className="relative z-10 text-center px-4"
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
           >
-            <h1 className="text-6xl md:text-7xl font-black text-foreground mb-4">
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black text-foreground mb-2 sm:mb-4">
               EdVerse
             </h1>
-            <p className="text-xl text-muted-foreground mb-2">
+            <p className="text-lg sm:text-xl text-muted-foreground mb-2">
               Rule your Learning journey
             </p>
-            <p className="text-sm text-purple-600 font-medium">
+            <p className="text-xs sm:text-sm text-purple-600 font-medium">
               Personalized AI powered education
             </p>
           </motion.div>
 
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 1, duration: 0.5 }}
-            className="absolute -top-[40px] -right-[105px] transform rotate-12"
-          >
-            <div className="bg-[#FFD7B5] text-black px-4 py-2 font-bold rounded-xl border-2 border-black shadow-brutal">
-              CODE
-            </div>
-          </motion.div>
+          {/* Mobile Floating Elements */}
+          <div className="block sm:hidden">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 1, duration: 0.5 }}
+              className="absolute -top-[30px] -right-[-40px] transform rotate-12"
+            >
+              <div className="bg-[#FFD7B5] text-black px-3 py-1.5 text-sm font-bold rounded-xl border-2 border-black shadow-brutal">
+                Read
+              </div>
+            </motion.div>
 
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 1.2, duration: 0.5 }}
-            className="absolute bottom-40 left-30 transform -rotate-12"
-          >
-            <div className="bg-[#B5FFD7] text-black px-4 font-bold py-2 rounded-xl border-2 border-black shadow-brutal">
-              CODE
-            </div>
-          </motion.div>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 1.2, duration: 0.5 }}
+              className="absolute bottom-[100px] left-[55px] transform -rotate-12"
+            >
+              <div className="bg-[#B5FFD7] text-black px-3 py-1.5 text-sm font-bold rounded-xl border-2 border-black shadow-brutal">
+                Learn
+              </div>
+            </motion.div>
 
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 1.4, duration: 0.5 }}
-            className="absolute top-[115px] -right-[120px] transform rotate-6 font-bold"
-          >
-            <div className="bg-[#FFB5D7] text-black px-4 py-2 rounded-xl border-2 border-black shadow-brutal">
-              CODE
-            </div>
-          </motion.div>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 1.4, duration: 0.5 }}
+              className="absolute top-[80px] -right-[-30px] transform rotate-6"
+            >
+              <div className="bg-[#FFB5D7] text-black px-3 py-1.5 text-sm font-bold rounded-xl border-2 border-black shadow-brutal">
+                Rule
+              </div>
+            </motion.div>
 
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 1.6, duration: 0.5 }}
-            className="absolute bottom-[-20px] right-[350px] transform rotate-6"
-          >
-            <div className="bg-[#B5D7FF] text-black px-4 py-2 rounded-xl border-2 font-bold border-black shadow-brutal">
-              AI
-            </div>
-          </motion.div>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 1.6, duration: 0.5 }}
+              className="absolute bottom-[-30px] right-[300px] transform rotate-6"
+            >
+              <div className="bg-[#B5D7FF] text-black px-3 py-1.5 text-sm font-bold rounded-xl border-2 border-black shadow-brutal">
+                AI
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Desktop Floating Elements */}
+          <div className="hidden sm:block">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 1, duration: 0.5 }}
+              className="absolute -top-[60px] -right-[-80px] transform rotate-12"
+            >
+              <div className="bg-[#FFD7B5] text-black px-4 py-2 font-bold rounded-xl border-2 border-black shadow-brutal">
+                Read
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 1.2, duration: 0.5 }}
+              className="absolute bottom-[-30px] -left-[-30 px] transform -rotate-12"
+            >
+              <div className="bg-[#B5FFD7] text-black px-4 py-2 font-bold rounded-xl border-2 border-black shadow-brutal">
+                Learn
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 1.4, duration: 0.5 }}
+              className="absolute top-[-60px] -right-[-1050px] transform rotate-6"
+            >
+              <div className="bg-[#FFB5D7] text-black px-4 py-2 font-bold rounded-xl border-2 border-black shadow-brutal">
+                Rule
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 1.6, duration: 0.5 }}
+              className="absolute -bottom-[80px] right-[170px] transform rotate-6"
+            >
+              <div className="bg-[#B5D7FF] text-black px-4 py-2 font-bold rounded-xl border-2 border-black shadow-brutal">
+                AI
+              </div>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -156,7 +225,6 @@ const Index = () => {
           Start Learning Today
         </Button>
       </motion.div>
-
       <div className="relative">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-1 mb-20 text-center">
           <motion.div
@@ -222,7 +290,6 @@ const Index = () => {
           </motion.div>
         </div>
       </div>
-
       <footer className="bg-card border-t-4 border-foreground py-8">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <p className="text-sm sm:text-base text-muted-foreground">

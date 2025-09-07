@@ -30,7 +30,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userData = localStorage.getItem("ugram_user");
+    const userData = localStorage.getItem("accessToken");
     if (userData) {
       setUser(JSON.parse(userData));
     } else {

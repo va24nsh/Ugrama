@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import Payment from "./pages/Payment";
 import CourseModule from "./pages/CourseModule";
 import NotFound from "./pages/NotFound";
+import PostPaymentOnboarding from "./pages/PostPayOnboard";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/signup" element={<Signup />} />
           <Route path="/onboarding-chat" element={<OnboardingChat />} />
           <Route path="/recommendations" element={<Recommendations />} />
+          <Route path="/post-payment-onboarding" element={<PostPaymentOnboarding />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/course-module" element={<CourseModule />} />
