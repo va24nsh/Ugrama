@@ -67,7 +67,6 @@ const CourseModule = () => {
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
   const [player, setPlayer] = useState<any>(null);
   const [playerReady, setPlayerReady] = useState(false);
-  
 
   // Doubt feature states
   const [doubts, setDoubts] = useState<Doubt[]>([]);
