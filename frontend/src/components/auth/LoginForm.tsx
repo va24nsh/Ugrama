@@ -40,19 +40,25 @@ const staggerChildren: Variants = {
     }
   }
 };
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Simulate login - in real app, this would be an API call
-    const mockUser = {
-      id: 123,
-      name: "John Doe",
-      email: formData.email,
-      user_type: "student", // This would come from backend
-    };
-    
-    localStorage.setItem("ugram_user", JSON.stringify(mockUser));
-    
+    const user = await fetch("http://localhost:5000/api/V1/user/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password
+      }),
+      credentials: "include"
+    });
+    const userData = await user.json();
+
+    localStorage.setItem("accessToken", JSON.stringify(userData.data.accessToken));
+
     toast({
       title: "Welcome back!",
       description: "You've been successfully logged in",

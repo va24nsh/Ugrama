@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 
 export const SignupForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -16,7 +17,7 @@ export const SignupForm = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!userType) {
@@ -38,15 +39,24 @@ export const SignupForm = () => {
     }
 
     // Simulate API call
-    const user = {
-      id: Math.random(),
-      name: formData.name,
-      email: formData.email,
-      user_type: userType,
-    };
-    
-    localStorage.setItem("ugram_user", JSON.stringify(user));
-    
+    const user = await fetch("http://localhost:5000/api/V1/user/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        role: userType
+      }),
+      credentials: "include"
+    });
+    const userData = await user.json();
+
+    localStorage.setItem("accessToken", JSON.stringify(userData.data.accessToken));
+
     toast({
       title: "Welcome to Ugram!",
       description: "Your account has been created successfully",
@@ -106,7 +116,20 @@ export const SignupForm = () => {
             id="name"
             type="text"
             placeholder="Enter your full name"
-            value={formData.name}
+            value={formData.firstName}
+            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            required
+            className="border-2 border-foreground"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="name">Last Name</Label>
+          <Input
+            id="name"
+            type="text"
+            placeholder="Enter your last name"
+            value={formData.lastName}
             onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
             required
             className="border-2 border-foreground"
